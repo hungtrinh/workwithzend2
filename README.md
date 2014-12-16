@@ -43,6 +43,18 @@ $ php composer.phar install
 $ cd ~/www/zf2tuto
 $ php composer.phar require zendframework/zftool:dev-master
 ```
+### create module album
 
+```sh
+$ cd ~/www/zf2tuto
+$ zftool create module album
+```
+Check module Album added to project
+```sh
+$ ls ~/www/zf2tuto/modules/
+Album Application
+$ cat config/application.config.php | grep Album
+    'Album'
+```
 [zftool on github]: https://github.com/zendframework/ZFTool
 [Issue description  and solution here]: https://github.com/zendframework/ZFTool/issues/51#issuecomment-25453131
