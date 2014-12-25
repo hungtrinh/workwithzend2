@@ -50,7 +50,7 @@ Open web browser with url: http://localhost:8888/
 $ cd ~/www/zf2tuto
 $ php composer.phar require zendframework/zftool:dev-master
 ```
-### create module album
+### Create module album
 
 ```sh
 $ cd ~/www/zf2tuto
@@ -63,5 +63,34 @@ Album Application
 $ cat config/application.config.php | grep Album
     'Album'
 ```
+### Test Driven Development 
+
+Please see [Unit Testing a Zend Framework 2 application]
+```sh
+$ mkdir -p ~/www/zf2tuto/module/Album/test/AlbumTest/Controller
+$ mkdir -p ~/www/zf2tuto/module/Album/test/AlbumTest/Model
+```
+
+Make phpunit.xml
+```sh
+$ echo '<?xml version="1.0" encoding="UTF-8"?><phpunit bootstrap="Bootstrap.php" colors="true"><testsuites><testsuite name="zf2tuto"><directory>./AlbumTest</directory></testsuite></testsuites></phpunit>' | xmllint --format - | tee ~/www/zf2tuto/module/Album/test/phpunit.xml
+```
+
+Verify phpunit.xml content
+```sh
+$ cat ~/www/zf2tuto/module/Album/test/phpunit.xml
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="Bootstrap.php" colors="true">
+  <testsuites>
+    <testsuite name="zf2tuto">
+      <directory>./AlbumTest</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>
+```
 [zftool on github]: https://github.com/zendframework/ZFTool
 [Issue description  and solution here]: https://github.com/zendframework/ZFTool/issues/51#issuecomment-25453131
+[Unit Testing a Zend Framework 2 application]: http://framework.zend.com/manual/current/en/tutorials/unittesting.html#setting-up-the-tests-directory
