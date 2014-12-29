@@ -1,8 +1,22 @@
+<!-- MarkdownTOC -->
+
+- [Install zf2 tool](#install-zf2-tool)
+    - [Features](#features)
+    - [Installation on ubuntu](#installation-on-ubuntu)
+    - [Check version of zftool](#check-version-of-zftool)
+- [Create zf2tuto project](#create-zf2tuto-project)
+    - [Verify app run](#verify-app-run)
+    - [Fix zftool issue when work with zf2tuto](#fix-zftool-issue-when-work-with-zf2tuto)
+    - [Create module album](#create-module-album)
+    - [Test driven development](#test-driven-development)
+
+<!-- /MarkdownTOC -->
+
+
 # Install zf2 tool
 
 ZFTool is an utility module for maintaining modular Zend Framework 2 applications. It runs from the command line and can be installed as ZF2 module or as PHAR.
 [zftool on github]
-
 
 ## Features
 
@@ -29,12 +43,11 @@ $ cd ~/Downloads \
 && sudo mv zftool.phar /usr/local/bin/zftool
 ```
 
-## Usage
-### Check version of zftool
+## Check version of zftool
 ```sh
 $ zftool version
 ```
-### Create zf2tuto project
+# Create zf2tuto project
 ```sh
 $ mkdir ~/www
 $ cd ~/www
@@ -51,21 +64,21 @@ $ mkdir ~/www /
 && php composer.phar install
 ```
 
-### Verify app run
+## Verify app run
 ```sh
 $ cd ~/www/zf2tuto/public
 $ php -S 0:8888
 ```
 Open web browser with url: http://localhost:8888/
 
-### Fix zftool issue when work with zf2tuto
+## Fix zftool issue when work with zf2tuto
 [Issue description  and solution here]
 
 ```sh
 $ cd ~/www/zf2tuto
 $ php composer.phar require zendframework/zftool:dev-master
 ```
-### Create module album
+## Create module album
 
 ```sh
 $ cd ~/www/zf2tuto
@@ -78,7 +91,7 @@ Album Application
 $ cat config/application.config.php | grep Album
     'Album'
 ```
-### Test Driven Development 
+## Test driven development
 
 Please see [Unit Testing a Zend Framework 2 application]
 ```sh
