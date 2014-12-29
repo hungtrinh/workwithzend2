@@ -91,6 +91,17 @@ $ cat ~/www/zf2tuto/module/Album/test/phpunit.xml
   </testsuites>
 </phpunit>
 ```
+
+Install portable phpunit version (the PHAR):
+```sh
+$ cd ~/www/zf2tuto/module/Album/test
+$ wget https://phar.phpunit.de/phpunit.phar
+$ chmod +x phpunit.phar
+$ mv phpunit.phar phpunit
+$ phpunit --version
+PHPUnit x.y.z by Sebastian Bergmann.
+```
+
 [zftool on github]: https://github.com/zendframework/ZFTool
 [Issue description  and solution here]: https://github.com/zendframework/ZFTool/issues/51#issuecomment-25453131
 [Unit Testing a Zend Framework 2 application]: http://framework.zend.com/manual/current/en/tutorials/unittesting.html#setting-up-the-tests-directory
