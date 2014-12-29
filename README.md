@@ -21,6 +21,13 @@ $ wget http://packages.zendframework.com/zftool.phar
 $ chmod +x zftool.phar
 $ sudo mv zftool.phar /usr/local/bin/zftool
 ```
+Or shortcut
+```sh
+$ cd ~/Downloads \
+&& wget http://packages.zendframework.com/zftool.phar \
+&& chmod +x zftool.phar \
+&& sudo mv zftool.phar /usr/local/bin/zftool
+```
 
 ## Usage
 ### Check version of zftool
@@ -34,6 +41,14 @@ $ cd ~/www
 $ zftool create project zf2tuto
 $ cd zf2tuto
 $ php composer.phar install
+```
+Or shortcut
+```sh
+$ mkdir ~/www /
+&& cd ~/www /
+&& zftool create project zf2tuto /
+&& cd zf2tuto /
+&& php composer.phar install
 ```
 
 ### Verify app run
