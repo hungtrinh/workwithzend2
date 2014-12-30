@@ -32,6 +32,8 @@
         - [Verify fail with test matched route **/album/edit/1**](#verify-fail-with-test-matched-route-albumedit1)
         - [Fill real code to pass test **/album/edit/1**](#fill-real-code-to-pass-test-albumedit1)
         - [Verify passed test matched route **/album/edit/1**](#verify-passed-test-matched-route-albumedit1)
+    - [Modeling Album](#modeling-album)
+        - [Make test Album Model](#make-test-album-model)
 
 <!-- /MarkdownTOC -->
 
@@ -523,6 +525,18 @@ AlbumTest\Controller\AlbumController
  [x] Can access add album
  [x] Can access edit album
 ...
+```
+## Modeling Album
+* Now we make album model, using Plain older php object(POPO).
+* In this example (Album look like anemic domain model).
+* Alway keep in mind [You Arent Gonna Need It (YAGNI)](http://c2.com/cgi/wiki?YouArentGonnaNeedIt) - add something if you need do that
+### Make test Album Model
+What we need? 
+we need some object keep track album id, artist, album title => we have **Album entity**.
+
+So **Album entity** look like this
+![Album entity class diagram](http://yuml.me/8ebd8131 "Album class diagram")
+
 
 [zftool on github]: https://github.com/zendframework/ZFTool
 [Issue description  and solution here]: https://github.com/zendframework/ZFTool/issues/51#issuecomment-25453131
