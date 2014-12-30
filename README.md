@@ -18,21 +18,20 @@
             - [make file zf2tuto/module/Album/test/Boostrap.php](#make-file-zf2tutomodulealbumtestboostrapphp)
         - [Verify phpunit.xml and Bootstrap.php are working](#verify-phpunitxml-and-bootstrapphp-are-working)
     - [Make album list page route](#make-album-list-page-route)
-        - [Make test route /album](#make-test-route-album)
+        - [Make test route **/album**](#make-test-route-album)
         - [Run test to see failed status](#run-test-to-see-failed-status)
-        - [Fill real code to pass test route /album](#fill-real-code-to-pass-test-route-album)
-        - [Run test again to see test route /album success](#run-test-again-to-see-test-route-album-success)
+        - [Fill real code to pass test route **/album**](#fill-real-code-to-pass-test-route-album)
+        - [Run test again to see test route **/album** success](#run-test-again-to-see-test-route-album-success)
     - [Create an album](#create-an-album)
-        - [Make test route /album/add](#make-test-route-albumadd)
-        - [Verify fail with test matched route /album/add/1](#verify-fail-with-test-matched-route-albumadd1)
-        - [Fill real code to pass test /album/add/1](#fill-real-code-to-pass-test-albumadd1)
-        - [Verify passed test matched route /album/add/1](#verify-passed-test-matched-route-albumadd1)
-    - [Show an album detail route](#show-an-album-detail-route)
-        - [Make test route  to see album with id 1 /album/show/1](#make-test-route--to-see-album-with-id-1-albumshow1)
-        - [Verify fail with test matched route /album/show/1](#verify-fail-with-test-matched-route-albumshow1)
-        - [Fill real code to pass test /album/show/1](#fill-real-code-to-pass-test-albumshow1)
-        - [Verify passed test matched route /album/show/1](#verify-passed-test-matched-route-albumshow1)
-    - [Delete an album route](#delete-an-album-route)
+        - [Make test route **/album/add**](#make-test-route-albumadd)
+        - [Verify fail with test matched route **/album/add**](#verify-fail-with-test-matched-route-albumadd)
+        - [Fill real code to pass test **/album/add**](#fill-real-code-to-pass-test-albumadd)
+        - [Verify passed test matched route **/album/add**](#verify-passed-test-matched-route-albumadd)
+    - [Edit an album route](#edit-an-album-route)
+        - [Make test route  to access edit album with id 1 **/album/edit/1**](#make-test-route--to-access-edit-album-with-id-1-albumedit1)
+        - [Verify fail with test matched route **/album/edit/1**](#verify-fail-with-test-matched-route-albumedit1)
+        - [Fill real code to pass test **/album/edit/1**](#fill-real-code-to-pass-test-albumedit1)
+        - [Verify passed test matched route **/album/edit/1**](#verify-passed-test-matched-route-albumedit1)
 
 <!-- /MarkdownTOC -->
 
@@ -297,7 +296,7 @@ Time: 755 ms, Memory: 3.75Mb
 
 ## Make album list page route
 we access /album to retrieve list album
-### Make test route /album 
+### Make test route **/album** 
 make file zf2tuto/module/Album/test/AlbumTest/Controller/AlbumControlleTest.php with the following content
 
 ```php
@@ -345,7 +344,7 @@ There was 1 failure:
 Failed asserting response code "200", actual status code is "404"
 ...
 ```
-### Fill real code to pass test route /album
+### Fill real code to pass test route **/album**
 make file zf2tuto/module/Album/src/Album/Controller/AlbumController.php with the following content
 ```php
 <?php
@@ -387,11 +386,11 @@ return array(
                     ),//defaults
                 ),//options
             ),//album
-        ),//routes   
+        ),//routes
     ),//router
 );
 ```
-### Run test again to see test route /album success
+### Run test again to see test route **/album** success
 ```sh
 $ cd ~/www/zf2tuto/module/Album/test
 $ php phpunit.phar --testdox
@@ -403,7 +402,7 @@ AlbumTest\Controller\AlbumController
 
 ## Create an album
 add to zf2tuto/module/Album/test/AlbumTest/Controller/AlbumControlleTest.php with the following content 
-### Make test route /album/add
+### Make test route **/album/add**
 ```php
 <?php
 
@@ -426,7 +425,7 @@ class AlbumControllerTest extends AbstractHttpControllerTestCase
     }
 }
 ```
-### Verify fail with test matched route /album/add/1
+### Verify fail with test matched route **/album/add**
 
 ```sh
 $ cd ~/www/zf2tuto/module/Album/test
@@ -438,20 +437,20 @@ There was 1 failure:
 Failed asserting action name "add", actual action name is "not-found"
 ...
 ```
-### Fill real code to pass test /album/add/1
-append following content to file zf2tuto/module/Album/src/Album/Controller/AlbumController.php
+### Fill real code to pass test **/album/add**
+append following content to file zf2tuto/module/Album/src/AlbumTest/Controller/AlbumControllerTest.php
 ```php
 
-class AlbumController extends AbstractActionController
+class AlbumControllerTest extends AbstractActionController
 {
-    /* old indexAction() method code here*/
+    /* old indexAction() method code HERE */
     public function addAction()
     {
         return false;
     }
 }
 ```
-### Verify passed test matched route /album/add/1
+### Verify passed test matched route **/album/add**
 ```sh
 $ cd ~/www/zf2tuto/module/Album/test
 $ php phpunit.phar --testdox
@@ -460,16 +459,70 @@ AlbumTest\Controller\AlbumController
  [x] Can access list album
  [x] Can access add album
 ...
+```
+## Edit an album route
+To edit an album : access /album/edit/:id
+### Make test route  to access edit album with id 1 **/album/edit/1**
+Append following content to file zf2tuto/module/Album/test/Album/Controller/AlbumControllerTest.php
+```php
 
-## Show an album detail route
-To show an album detail: access /album/show/:id (:id is album id, is digit only)
-### Make test route  to see album with id 1 /album/show/1
-### Verify fail with test matched route /album/show/1
-### Fill real code to pass test /album/show/1
-### Verify passed test matched route /album/show/1
+class AlbumControllerTest extends AbstractHttpControllerTestCase
+{
+    /* 
+    testCanAccessListAlbum()
+    testCanAccessAddAlbum() code HERE 
+    */
+    public function testCanAccessEditAlbum()
+    {
+        $this->dispatch('/album/edit/1');
 
-## Delete an album route
+        $this->assertModuleName('Album');
+        $this->assertControllerName('Album\\Controller\\Album');
+        $this->assertControllerClass('AlbumController');
+        $this->assertActionName('edit');
+        $this->assertMatchedRouteName('album');
+    }
+}
+```
+### Verify fail with test matched route **/album/edit/1**
+```sh
+$ cd ~/www/zf2tuto/module/Album/test
+$ php phpunit.phar
+...
+There was 1 failure:
 
+1) AlbumTest\Controller\AlbumControllerTest::testCanAccessEditAlbum
+Failed asserting action name "edit", actual action name is "not-found"
+...
+```
+### Fill real code to pass test **/album/edit/1**
+Append following code to zf2tuto/module/Album/src/Album/Controller/AlbumController.php
+```php
+...
+class AlbumController extends AbstractActionController
+{
+    /*
+    indexAction()
+    addAction()
+    editAction()
+    code HERE
+    */
+    public function editAction()
+    {
+        return false;
+    }
+}
+```
+### Verify passed test matched route **/album/edit/1**
+```sh
+$ cd ~/www/zf2tuto/module/Album/test
+$ php phpunit.phar --testdox
+...
+AlbumTest\Controller\AlbumController
+ [x] Can access list album
+ [x] Can access add album
+ [x] Can access edit album
+...
 
 [zftool on github]: https://github.com/zendframework/ZFTool
 [Issue description  and solution here]: https://github.com/zendframework/ZFTool/issues/51#issuecomment-25453131
