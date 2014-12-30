@@ -33,7 +33,16 @@
         - [Fill real code to pass test **/album/edit/1**](#fill-real-code-to-pass-test-albumedit1)
         - [Verify passed test matched route **/album/edit/1**](#verify-passed-test-matched-route-albumedit1)
     - [Modeling Album](#modeling-album)
-        - [Make test Album Model](#make-test-album-model)
+        - [Again Test First, Test Album initial state](#again-test-first-test-album-initial-state)
+            - [Make test initial Album Model](#make-test-initial-album-model)
+            - [Run phpunit](#run-phpunit)
+            - [Fill code to pass first test](#fill-code-to-pass-first-test)
+            - [Verify pass test initial album](#verify-pass-test-initial-album)
+        - [Test Entity Album full fill data](#test-entity-album-full-fill-data)
+            - [Again, write test exchange properties correctly](#again-write-test-exchange-properties-correctly)
+            - [Again, run test to see failed status](#again-run-test-to-see-failed-status)
+            - [Again, fill code to pass test](#again-fill-code-to-pass-test)
+            - [Again, test passed](#again-test-passed)
 
 <!-- /MarkdownTOC -->
 
@@ -526,18 +535,107 @@ AlbumTest\Controller\AlbumController
  [x] Can access edit album
 ...
 ```
+
 ## Modeling Album
+
 * Now we make album model, using Plain older php object(POPO).
 * In this example (Album look like anemic domain model).
 * Alway keep in mind [You Arent Gonna Need It (YAGNI)](http://c2.com/cgi/wiki?YouArentGonnaNeedIt) - add something if you need do that
-### Make test Album Model
+
 What we need? 
 we need some object keep track album id, artist, album title => we have **Album entity**.
-
 So **Album entity** look like this
+
 ![Album entity class diagram](http://yuml.me/8ebd8131 "Album class diagram")
+### Again Test First, Test Album initial state
+#### Make test initial Album Model
+You can avoid this test case (with anemic model, trivial logic: avoid unit test to safe your time :D).
+* Create folder zf2tuto/module/Album/test/AlbumTest/Entity
+* Create file zf2tuto/module/Album/test/AlbumTest/Entity/AlbumTest.php
+```sh
+$ cd ~/www/zf2tuto
+$ mkdir module/Album/test/AlbumTest/Entity
+$ touch module/Album/test/AlbumTest/Entity/AlbumTest.php
+```
+fill following content to zf2tuto/module/Album/test/AlbumTest/Entity/AlbumTest.php
+```php
+<?php
 
+namespace AlbumTest\Entity;
 
+use Album\Entity\Album;
+use PHPUnit_Framework_TestCase;
+
+class Album extends PHPUnit_Framework_TestCase
+{
+    public function testInitialState()
+    {
+        $album = new Album();
+        $this->assertNull($album->getId());
+        $this->assertNull($album->getTitle());
+        $this->assertNull($album->getArtist());
+    }
+}
+```
+#### Run phpunit
+```sh
+$ cd ~/www/zf2tuto/module/Album/test
+$ php phpunit.phar
+...
+PHP Fatal error:  Class 'Album\Entity\Album' not found 
+...
+```
+
+#### Fill code to pass first test
+* Create folder zf2tuto/module/Album/src/Album/Entity
+* Create file zf2tuto/module/Album/src/Album/Entity/Album.php
+```sh
+$ cd ~/www/zf2tuto
+$ mkdir module/Album/src/Album/Entity
+$ touch module/Album/src/Album/Entity/Album.php
+```
+fill following content to file zf2tuto/module/Album/src/Album/Entity/Album.php
+```php
+<?php 
+namespace Album\Entity;
+
+class Album
+{
+    public function getId()
+    {
+        return null;
+    }
+
+    public function getTitle()
+    {
+        return null;
+    }
+
+    public function getArtist()
+    {
+        return null;
+    }
+}
+```
+#### Verify pass test initial album
+```sh
+$ cd ~/www/zf2tuto/module/Album/test
+$ php phpunit.phar --testdox
+...
+AlbumTest\Controller\AlbumController
+ [x] Can access list album
+ [x] Can access add album
+ [x] Can access edit album
+ 
+AlbumTest\Entity\Album
+ [x] Initial state is null
+...
+```
+### Test Entity Album full fill data
+#### Again, write test exchange properties correctly
+#### Again, run test to see failed status
+#### Again, fill code to pass test
+#### Again, test passed
 [zftool on github]: https://github.com/zendframework/ZFTool
 [Issue description  and solution here]: https://github.com/zendframework/ZFTool/issues/51#issuecomment-25453131
 [Unit Testing a Zend Framework 2 application]: http://framework.zend.com/manual/current/en/tutorials/unittesting.html#setting-up-the-tests-directory
