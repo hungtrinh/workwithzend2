@@ -633,9 +633,173 @@ AlbumTest\Entity\Album
 ```
 ### Test Entity Album full fill data
 #### Again, write test exchange properties correctly
+Append following content to zf2tuto/module/Album/test/AlbumTest/Entity/AlbumTest.php
+```php
+<?php
+...
+class AlbumTest extends PHPUnit_Framework_TestCase
+{
+    /**/
+    public function testExchangeArraySetsPropertiesCorrectly()
+    {
+        $exchangeData = array(
+            'id' => 1,
+            'title' => 'first time',
+            'artist' => 'you'
+        );
+
+        $album = new Album($exchangeData);
+        $this->assertEquals(1,$album->getId());
+        $this->assertEquals('first time', $album->getTitle());
+        $this->assertEquals('you', $album->getArtist());
+    }
+    /**/
+}
+....
+```
 #### Again, run test to see failed status
+```sh
+$ cd ~/www/zf2tuto/module/Album/test
+$ php phpunit.phar 
+...
+There was 1 failure:
+
+1) AlbumTest\Entity\AlbumTest::testExchangeArraySetsPropertiesCorrectly
+Failed asserting that null matches expected 1.
+...
+```
 #### Again, fill code to pass test
+fill following content to zf2tuto/module/Album/src/Album/Entity/Album.php
+```php
+<?php 
+namespace Album\Entity;
+
+class Album
+{
+    /**
+     * @var string
+     */
+    private $title;
+
+    /**
+     * @var string
+     */
+    private $artist;
+
+    /**
+     * @var int
+     */
+    private $id;
+
+    /**
+     * Make album from array
+     * @param array [title,id,artist]
+     */
+    public function __construct($data=array()) {
+        if (!$data) {
+            return;
+        }
+        if (isset($data['title'])) {
+            $this->setTitle($data['title']);
+        }
+        if (isset($data['artist'])) {
+            $this->setArtist($data['artist']);
+        }
+        if (isset($data['id'])) {
+            $this->setId ($data['id']);
+        }
+    }
+
+    /**
+     * Gets the value of title.
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Sets the value of title.
+     *
+     * @param string $title the title
+     *
+     * @return self
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+
+    /**
+     * Gets the value of artist.
+     *
+     * @return string
+     */
+    public function getArtist()
+    {
+        return $this->artist;
+    }
+
+    /**
+     * Sets the value of artist.
+     *
+     * @param string $artist the artist
+     *
+     * @return self
+     */
+    public function setArtist($artist)
+    {
+        $this->artist = $artist;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of id.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Sets the value of id.
+     *
+     * @param int $id the id
+     *
+     * @return self
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+}
+```
 #### Again, test passed
+```sh
+$ cd ~/www/zf2tuto/module/Album/test
+$ php phpunit.phar --testdox
+...
+AlbumTest\Controller\AlbumController
+ [x] Can access list album
+ [x] Can access add album
+ [x] Can access edit album
+ 
+AlbumTest\Entity\Album
+ [x] Initial state is null
+ [x] Exchange array sets properties correctly
+...
+```
+
 [zftool on github]: https://github.com/zendframework/ZFTool
 [Issue description  and solution here]: https://github.com/zendframework/ZFTool/issues/51#issuecomment-25453131
 [Unit Testing a Zend Framework 2 application]: http://framework.zend.com/manual/current/en/tutorials/unittesting.html#setting-up-the-tests-directory
