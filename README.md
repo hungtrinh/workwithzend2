@@ -972,6 +972,8 @@ class AlbumTable
             throw new \Exception('Album not found');
         }
 
+        //TODO diff $albumRowSet with $album data to update partial data only
+
         $this->albumTable->update(
             array(
                 'artist' => $album->getArtist(),
