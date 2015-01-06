@@ -48,6 +48,7 @@
         - [Code Test first](#code-test-first)
         - [Verify failing status](#verify-failing-status)
         - [Full fill code to pass test](#full-fill-code-to-pass-test)
+        - [Verify success status](#verify-success-status)
 
 <!-- /MarkdownTOC -->
 
@@ -819,6 +820,50 @@ AlbumTest\Entity\Album
 ##  Mapper entity to persistent 
 ### Data mapper interface 
 ![Album mapper interface class diagram](http://yuml.me/c4696820 "Album mapper interface class diagram")
+```sh
+$ cd ~/www/zf2tuto
+$ touch module/Album/src/Album/Mapper/AlbumInterface.php
+```
+copy following content to zf2tuto/module/Album/src/Album/Mapper/AlbumInterface.php
+
+```php
+<?php
+namespace Album\Mapper;
+
+use Album\Entity\Album;
+
+interface AlbumInterface
+{
+    /**
+     * Insert new album
+     * 
+     * @access public 
+     * @param  Album  $album 
+     * @return void
+     */
+    public function insert(Album $album);
+    
+    /**
+     * Update existing album
+     * 
+     * @access public 
+     * @param  Album  $album 
+     * @return void
+     * @throws \Exception If non existent album id, or non existent album in database
+     */
+    public function update(Album $album);
+
+    /**
+     * Delete existing album
+     * 
+     * @access public 
+     * @param  Album  $album 
+     * @return void
+     * @throws \Exception If non existent album id, or non existent album in database
+     */
+    public function delete(Album $album);
+}
+```
 ### Code Test first
 ```php
 <?php
@@ -826,83 +871,71 @@ AlbumTest\Entity\Album
 namespace AlbumTest\Mapper;
 
 use Album\Entity\Album;
-use Album\Mapper\AlbumTable;
+use Album\Mapper\AlbumTable as AlbumMapper;
 use Zend\Db\ResultSet\ResultSet;
 use PHPUnit_Framework_TestCase;
 
 class AlbumTableTest extends PHPUnit_Framework_TestCase
 {
-    public function testWhenInsertNewAlbumSuccessThenAlbumInsertedHasAnIdIsNumberic()
-    {
-        $mockAlbumTableGatewate = $this->getMock(
-            'Zend\Db\TableGateway\TableGateway',
-            $methods = array('insert'),
-            $arguments = array(),
-            $mockClassName = '',
-            $callOriginalConstructor = FALSE,
-            $callOriginalClone = TRUE,
-            $callAutoload = TRUE
-        );
+    /**
+     * mock album table gateway
+     * @var Mock
+     */
+    private $mockAlbumTableGatewate;
 
+    /**
+     * album mapper
+     * @var Album\Mapper\AlbumTable
+     */
+    private $albumMapper;
+
+    public function setUp()
+    {
+        $tableGateway = 'Zend\Db\TableGateway\TableGateway';
+        $this->mockAlbumTableGatewate = $this->getMockBuilder( $tableGateway )
+                                             ->disableOriginalConstructor()
+                                             ->getMock();
+        $this->albumMapper = new AlbumMapper($this->mockAlbumTableGatewate);
+    }
+
+    public function testWhenInsertNewAlbumWithoutIdThenAfterAlbumInsertedAlbumHasAnId()
+    {
         $albumData = array(
             'title' => 'first time',
             'artist' => 'you'
         );
-
         $album = new Album($albumData);
-        $albumMapper = new AlbumTable($mockAlbumTableGatewate);
 
-        $mockAlbumTableGatewate->expects($this->once())
-            ->method('insert')
-            ->with($albumData)
-            ->will($this->returnValue(1));
+        $this->mockAlbumTableGatewate
+                ->expects($this->once())
+                ->method('insert')
+                ->with($albumData)
+                ->will($this->returnValue(1));
 
-        $albumMapper->insert($album);
+        $this->albumMapper->insert($album);
         $this->assertEquals(1,$album->getId());
     }
 
-    public function testWhenUpdateExistingAlbumWithAlbumAlreadyHaveAndIdThenSuccess()
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage Album id is required
+     */
+    public function testWhenUpdateAnAlbumWithAlbumMissingAlbumIdThenThrowException()
     {
-        $albumData = array(
-            'id' => 123,
+        $albumDataMissingId = array(
             'title' => 'first time',
             'artist' => 'you'
         );
-        $album = new Album($albumData);
+        $album = new Album($albumDataMissingId);
 
-        $resultSet = new ResultSet();
-        $resultSet->setArrayObjectPrototype(new Album);
-        $resultSet->initialize(array($album));
-
-        $mockAlbumTableGatewate = $this->getMock(
-            'Zend\Db\TableGateway\TableGateway',
-            $methods = array('select', 'update'),
-            $arguments = array(),
-            $mockClassName = '',
-            $callOriginalConstructor = FALSE,
-            $callOriginalClone = TRUE,
-            $callAutoload = TRUE
-        );
-
-        $mockAlbumTableGatewate->expects($this->once())
-            ->method('select')
-            ->with(array('id'=>123))
-            ->will($this->returnValue($resultSet));
-
-        $mockAlbumTableGatewate->expects($this->once())
-            ->method('update')
-            ->with(array('title'=> 'first time', 'artist' => 'you'), array('id'=> 123));
-
-        $album = new Album($albumData);
-        $albumMapper = new AlbumTable($mockAlbumTableGatewate);
-        $albumMapper->update($album);
+        $this->albumMapper->update($album);
     }
 
     /**
      * @expectedException \Exception
      * @expectedExceptionMessage Album not found
      */
-    public function testWhenUpdateAnAlbumNonExistentInDbThenThrowException()
+    public function testWhenUpdateAnAlbumNonExistentInDatabaseThenThrowException()
     {
         $albumData = array(
             'id' => 123,
@@ -915,23 +948,115 @@ class AlbumTableTest extends PHPUnit_Framework_TestCase
         $resultSet->setArrayObjectPrototype(new Album);
         $resultSet->initialize(array());
 
-        $mockAlbumTableGatewate = $this->getMock(
-            'Zend\Db\TableGateway\TableGateway',
-            $methods = array('select'),
-            $arguments = array(),
-            $mockClassName = '',
-            $callOriginalConstructor = FALSE,
-            $callOriginalClone = TRUE,
-            $callAutoload = TRUE
-        );
-
-        $mockAlbumTableGatewate->expects($this->once())
-            ->method('select')
-            ->will($this->returnValue($resultSet));
+        $this->mockAlbumTableGatewate
+                ->expects($this->once())
+                ->method('select')
+                ->with(array('id'=>123))
+                ->will($this->returnValue($resultSet));
 
         $album = new Album($albumData);
-        $albumMapper = new AlbumTable($mockAlbumTableGatewate);
-        $albumMapper->update($album);
+        $this->albumMapper->update($album);
+    }
+
+    public function testWhenUpdateExistingAlbumWithAlbumAlreadyHaveAnIdThenSuccess()
+    {
+        $albumData = array(
+            'id' => 123,
+            'title' => 'first time',
+            'artist' => 'you'
+        );
+        $album = new Album($albumData);
+
+        $resultSet = new ResultSet();
+        $resultSet->setArrayObjectPrototype(new Album);
+        $resultSet->initialize(array($album));
+
+        $this->mockAlbumTableGatewate
+                ->expects($this->once())
+                ->method('select')
+                ->with(array('id'=>123))
+                ->will($this->returnValue($resultSet));
+
+        $this->mockAlbumTableGatewate
+                ->expects($this->once())
+                ->method('update')
+                ->with( 
+                    array( 
+                        'title'=> 'first time', 
+                        'artist' => 'you'
+                    ),
+                    array('id'=> 123)
+                );
+
+        $album = new Album($albumData);
+        $this->albumMapper->update($album);
+    }
+
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage Album id is required
+     */
+    public function testWhenDeleteAnAlbumWithAlbumMissingAlbumIdThenThrowException()
+    {
+        $albumDataMissingId = array(
+            'title' => 'first time',
+            'artist' => 'you'
+        );
+        $album = new Album($albumDataMissingId);
+
+        $this->albumMapper->delete($album);
+    }
+
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage Album not found
+     */
+    public function testWhenDeleteAnAlbumWithAlbumNonExistentInDatabaseThenThrowException()
+    {
+        $albumData = array(
+            'id' => 123,
+            'title' => 'first time',
+            'artist' => 'you'
+        );
+        $album = new Album($albumData);
+
+        $resultSet = new ResultSet();
+        $resultSet->setArrayObjectPrototype(new Album);
+        $resultSet->initialize(array());
+
+        $this->mockAlbumTableGatewate
+                ->expects($this->once())
+                ->method('select')
+                ->with(array('id'=>123))
+                ->will($this->returnValue($resultSet));
+
+        $this->albumMapper->delete($album);
+    }
+
+    public function testWhenDeleteExistingAlbumWithAlbumIdThenDeleteSuccess()
+    {
+        $albumData = array(
+            'id' => 123,
+            'title' => 'first time',
+            'artist' => 'you'
+        );
+        $album = new Album($albumData);
+        $resultSet = new ResultSet();
+        $resultSet->setArrayObjectPrototype(new Album);
+        $resultSet->initialize(array($album));
+
+        $this->mockAlbumTableGatewate
+                ->expects($this->once())
+                ->method('select')
+                ->with(array('id'=>123))
+                ->will($this->returnValue($resultSet));
+                
+        $this->mockAlbumTableGatewate
+                ->expects($this->once())
+                ->method('delete')
+                ->with(array('id'=>123));
+
+        $this->albumMapper->delete($album);
     }
 }
 ```
@@ -939,14 +1064,23 @@ class AlbumTableTest extends PHPUnit_Framework_TestCase
 ### Full fill code to pass test
 ```php
 <?php
-
 namespace Album\Mapper;
 
 use Zend\Db\TableGateway\TableGateway;
 use Album\Entity\Album;
+use Album\Mapper\AlbumInterface;
 
-class AlbumTable
+/**
+ * Mapper to album db table 
+ * 
+ * @implements AlbumInterface
+ */
+class AlbumTable implements AlbumInterface
 {
+    /**
+     * @access private
+     * @var TableGateway
+     */
     private $albumTable;
 
     public function __construct(TableGateway $albumTable)
@@ -954,6 +1088,10 @@ class AlbumTable
         $this->albumTable = $albumTable;
     }
 
+    /**
+     * {@inheritdoc}
+     * @see AlbumInterface::insert
+     */
     public function insert(Album $album)
     {
         $id = $this->albumTable->insert(array(
@@ -963,16 +1101,21 @@ class AlbumTable
         $album->setId($id);
     }
 
+    /**
+     * {@inheritdoc}
+     * @see AlbumInterface::update
+     */
     public function update(Album $album)
     {
         $id = $album->getId();
-        $albumRowSet = $this->albumTable->select(array('id'=>$id));
-
-        if (0===$albumRowSet->count()) {
+        if (!$id) {
+            throw new \Exception('Album id is required');
+        }
+        $albumRowset = $this->albumTable->select(array('id'=>$id));
+        if (0 === $albumRowset->count()) {
             throw new \Exception('Album not found');
         }
-
-        //TODO diff $albumRowSet with $album data to update partial data only
+        //TODO diff $albumRowset with $album data to update partial data only
 
         $this->albumTable->update(
             array(
@@ -982,9 +1125,51 @@ class AlbumTable
             array('id' => $id)
         );
     }
+
+    /**
+     * {@inheritdoc}
+     * @see AlbumInterface::delete
+     */
+    public function delete(Album $album)
+    {
+        $id = $album->getId();
+        if (!$id) {
+            throw new \Exception('Album id is required');
+        }
+        $albumRowset = $this->albumTable->select(array('id'=>$id));
+        if (0 === $albumRowset->count()) {
+            throw new \Exception('Album not found');
+        }
+        // TODO you can compaire $albumRowset with $album: if it different you can throw Exception to notify end user
+
+        $this->albumTable->delete(array('id'=>$id));
+    }
 }
 ```
+### Verify success status 
+```sh
+$ cd ~/www/zf2tuto/module/Album/test
+$ php phpunit.phar --testdox
+...
+AlbumTest\Controller\AlbumController
+ [x] Can access list album
+ [x] Can access add album
+ [x] Can access edit album
 
+AlbumTest\Entity\Album
+ [x] Initial state is null
+ [x] Exchange array sets properties correctly
+
+AlbumTest\Mapper\AlbumTable
+ [x] When insert new album without id then after album inserted album has an id
+ [x] When update an album with album missing album id then throw exception
+ [x] When update an album non existent in database then throw exception
+ [x] When update existing album with album already have an id then success
+ [x] When delete an album with album missing album id then throw exception
+ [x] When delete an album with album non existent in database then throw exception
+ [x] When delete existing album with album id then delete success
+...
+```
 [zftool on github]: https://github.com/zendframework/ZFTool
 [Issue description  and solution here]: https://github.com/zendframework/ZFTool/issues/51#issuecomment-25453131
 [Unit Testing a Zend Framework 2 application]: http://framework.zend.com/manual/current/en/tutorials/unittesting.html#setting-up-the-tests-directory
