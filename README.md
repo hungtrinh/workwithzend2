@@ -849,7 +849,7 @@ interface AlbumInterface
      * @access public 
      * @param  Album  $album 
      * @return void
-     * @throws \Exception If non existent album id, or non existent album in database
+     * @throws \Exception If non existent album id, or non existent album in persistent store 
      */
     public function update(Album $album);
 
@@ -859,7 +859,7 @@ interface AlbumInterface
      * @access public 
      * @param  Album  $album 
      * @return void
-     * @throws \Exception If non existent album id, or non existent album in database
+     * @throws \Exception If non existent album id, or non existent album in persistent store
      */
     public function delete(Album $album);
 }
