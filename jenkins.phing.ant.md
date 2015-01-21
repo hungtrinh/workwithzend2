@@ -2,6 +2,7 @@
 
 - [Install jenkins](#install-jenkins)
 - [Install plugins](#install-plugins)
+- [References cited](#references-cited)
 
 <!-- /MarkdownTOC -->
 
@@ -28,3 +29,7 @@ java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin violations
 java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin xunit
 java -jar jenkins-cli.jar -s http://localhost:8080 safe-restart
 ```
+
+# References cited
+http://jenkins-php.org/
+http://pwong-tipsandtricks.blogspot.com/2014/12/install-jenkins-and-pluginstools-for.html
