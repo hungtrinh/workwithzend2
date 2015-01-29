@@ -27,6 +27,7 @@ java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin plot
 java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin pmd
 java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin violations
 java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin xunit
+java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin build-pipeline-plugin
 java -jar jenkins-cli.jar -s http://localhost:8080 safe-restart
 ```
 
