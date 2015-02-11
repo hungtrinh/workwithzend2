@@ -71,7 +71,7 @@ pick-dest:
 ...
 ```
 # References cited
-http://jenkins-php.org/
-http://pwong-tipsandtricks.blogspot.com/2014/12/install-jenkins-and-pluginstools-for.html
+* http://jenkins-php.org/
+* http://pwong-tipsandtricks.blogspot.com/2014/12/install-jenkins-and-pluginstools-for.html
 
 
