@@ -69,7 +69,20 @@ Buildfile: /usr/local/apache-ant-1.9.4/fetch.xml
 pick-dest:
      [echo] Downloading to /usr/local/apache-ant-1.9.4/lib
 ...
+## Add ant home to environment variable
+* Find java home
+```sh
+$ whereis java
+java: /usr/bin/java ...
 ```
+=> java home path: */usr*
+* Add ant home path to current user environment
+$ echo "export JAVA_HOME=/usr" >> ~/.bashrc
+$ echo "export ANT_HOME=/usr/local/apache-ant-1.9.4" >> ~/.bashrc
+$ echo "export PATH=${PATH}:${ANT_HOME}/bin" >> ~/.bashrc
+$ source ~/.bashrc
+```
+
 # References cited
 * http://jenkins-php.org/
 * http://pwong-tipsandtricks.blogspot.com/2014/12/install-jenkins-and-pluginstools-for.html
